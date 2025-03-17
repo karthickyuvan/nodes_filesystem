@@ -6,3 +6,4 @@ const ws=fs.createWriteStream(path.join(__dirname,'files','new_bigfile.txt'));
 
 rs.on('data',(dataChunk)=>{
     ws.write(dataChunk)});
+//rs.pipe(ws)-->read the file and write using pipe 
