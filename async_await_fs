@@ -1,0 +1,83 @@
+/*
+Here’s an async/await version of the Node.js file system operations using the fs.promises API. 
+This ensures that all file system operations execute sequentially in an easy-to-read format.*/
+
+
+const fs = require('fs').promises;
+const path = require('path');
+
+const filePath = path.join(__dirname, 'example.txt');
+const dirPath = path.join(__dirname, 'newDirectory');
+
+async function fileSystemOperations() {
+  try {
+    // 1. Create a new directory
+    await fs.mkdir(dirPath, { recursive: true });
+    console.log('Directory created successfully!');
+
+    // 2. Write to a file
+    await fs.writeFile(filePath, 'Hello, this is Node.js File System using async/await!');
+    console.log('File written successfully!');
+
+    // 3. Append to the file
+    await fs.appendFile(filePath, '\nAppending more content...');
+    console.log('Content appended successfully!');
+
+    // 4. Read the file
+    const data = await fs.readFile(filePath, 'utf8');
+    console.log('File content:\n', data);
+
+    // 5. Check if the file exists
+    try {
+      await fs.access(filePath);
+      console.log('File exists!');
+
+      // 6. Delete the file
+      await fs.unlink(filePath);
+      console.log('File deleted successfully!');
+    } catch (error) {
+      console.log('File does not exist!');
+    }
+
+    // 7. Remove the directory
+    await fs.rmdir(dirPath, { recursive: true });
+    console.log('Directory deleted successfully!');
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+fileSystemOperations();
+
+/*
+Explanation:
+Use fs.promises
+
+The fs.promises API allows file system functions to return Promises, making them compatible with async/await.
+Create a Directory (mkdir)
+
+await fs.mkdir(dirPath, { recursive: true }): Ensures the directory exists before proceeding.
+Write to a File (writeFile)
+
+await fs.writeFile(filePath, 'Your content'): Creates or overwrites a file.
+Append Content (appendFile)
+
+await fs.appendFile(filePath, 'Additional content'): Adds content without overwriting.
+Read File Content (readFile)
+
+const data = await fs.readFile(filePath, 'utf8'): Reads the file and prints the content.
+Check if File Exists (access)
+
+await fs.access(filePath): Throws an error if the file does not exist.
+Delete File (unlink)
+
+await fs.unlink(filePath): Deletes the file.
+Delete Directory (rmdir)
+
+await fs.rmdir(dirPath, { recursive: true }): Deletes the directory and all its contents.
+Why Use async/await?
+✅ Better Readability – No nested callbacks
+✅ Sequential Execution – Operations run in order
+✅ Error Handling with try/catch – More structured error management
+
+This is a clean, modern way to handle the file system in Node.js. 🚀*/
