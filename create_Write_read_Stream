@@ -1,0 +1,98 @@
+/*
+fs.createWriteStream() and fs.createReadStream() in Node.js
+In Node.js, streams are used to efficiently read and write large files without loading the entire content into memory. 
+The fs module provides createWriteStream() and createReadStream() to handle files using streams.
+  */
+
+ // 1. fs.createWriteStream()
+  
+//Used for writing data chunk by chunk to a file. This is useful for handling large files efficiently.
+
+      const fs = require('fs');
+const path = require('path');
+
+const filePath = path.join(__dirname, 'output.txt');
+
+// Create a writable stream
+const writeStream = fs.createWriteStream(filePath);
+
+// Write data to the file
+writeStream.write('Hello, this is the first line.\n');
+writeStream.write('This is the second line.\n');
+
+// End the stream (optional but recommended)
+writeStream.end('This is the last line.\n');
+
+writeStream.on('finish', () => {
+  console.log('File writing completed!');
+});
+
+writeStream.on('error', (err) => {
+  console.error('Error writing to file:', err);
+});
+
+
+/*
+How It Works
+fs.createWriteStream(filePath): Creates a writable stream.
+writeStream.write('data'): Writes data in chunks.
+writeStream.end('data'): Ends the stream and flushes the data.
+.on('finish'): Event fires when writing is completed.
+.on('error'): Handles errors.
+  */
+
+
+// 2. fs.createReadStream()
+                              
+// Used for reading large files without loading them fully into memory. Data is read in chunks.
+
+                                const readStream = fs.createReadStream(filePath, 'utf8');
+
+readStream.on('data', (chunk) => {
+  console.log('Received chunk:\n', chunk);
+});
+
+readStream.on('end', () => {
+  console.log('File reading completed!');
+});
+
+readStream.on('error', (err) => {
+  console.error('Error reading file:', err);
+});
+
+    */                                  How It Works
+                                      
+fs.createReadStream(filePath, 'utf8'): Creates a readable stream.
+.on('data', callback): Listens for data chunks.
+.on('end', callback): Fires when the file has been completely read.
+.on('error', callback): Handles errors.
+                                            */
+
+  // 3. Piping Streams (pipe())
+                                          
+//You can connect readStream to writeStream using .pipe(). This is useful for copying files efficiently.
+
+  const sourceFile = path.join(__dirname, 'input.txt');
+const destinationFile = path.join(__dirname, 'output.txt');
+
+const readStream = fs.createReadStream(sourceFile);
+const writeStream = fs.createWriteStream(destinationFile);
+
+readStream.pipe(writeStream);
+
+writeStream.on('finish', () => {
+  console.log('File copied successfully!');
+});
+
+
+/*  How It Works
+readStream.pipe(writeStream): Transfers data directly from input to output.
+Avoids memory overflow (ideal for large files).
+Efficient and non-blocking.
+*/
+
+
+/*  Conclusion                                                      Conclusion
+Use fs.createWriteStream() when writing large files efficiently.
+Use fs.createReadStream() for streaming file content.
+Use pipe() for efficient file copying.*/
